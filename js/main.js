@@ -23,7 +23,7 @@ var hack=(function () {
     function getRecipies(){
         $.ajax({
             type: 'GET',
-            url: getUrl(config.recipes),
+            url: getUrl(config.recipes + config.recipieParams),
             dataType: "json",
             success: successHandler,
             complete: function (xhr, status){
@@ -34,6 +34,21 @@ var hack=(function () {
         });
     };
 
+
+    function getRecipieById(id){
+        $.ajax({
+            type: 'GET',
+            url: getUrl(config.recipes + "/" + id + "?"),
+            dataType: "json",
+            success: drawRecipieGraph,
+            complete: function (xhr, status){
+                if(status == 'error'){
+                    console.log("Error getting data = " , xhr);
+                }
+            }
+        });
+    }
+
 	var successHandler = function(data){
 
         console.log(data);
@@ -41,23 +56,31 @@ var hack=(function () {
         var index;
         var html = '<ul>';
         var div_html = "";
-        var ingredients = "";
+        var ingredients = "&#60ul&#62";
+
         $.each(data.results, function(i, val) {
-
             index = i + 1;
-            html += '<li><a href="#tab-'+index+'">'+val.name+'</a></li>';
-
-            $.each(val.ingredients,function(i,ingredient){
-                ingredients += '<li class="sub">'+ingredient+'</li>';
+            
+            $.each(val.ingredients,function(i,ingredient){              
+                ingredients += '&#60li&#62'+ingredient+'&#60&#47li&#62';
             });
+            ingredients += "&#60&#47ul&#62";
+
+            html += '<li><img style="height: 90px;" src="'+val.thumb+'"/><a href="#" class="nolink" onclick="hack.getRecipieById(this.id)" id='+val.id+'>'+val.name+'</a></li>';
+
+            
             //div_html += '<div id="tabs-'+index+'"><p><ul><li>'+val.cooking_method+'</li><li>'+val.cuisine+'</li><li>ingredients</li>'+ingredients+'</ul></p></div>';
         });
-
 
         $("#tabs").html(html + '</ul>' + div_html);
 
         chart_data = data;
 	};
+
+
+    var drawRecipieGraph = function(data){
+        drawGraph(data);
+    };
 
 	function drawGraph(data){
 
@@ -131,6 +154,9 @@ var hack=(function () {
         },
         drawGraph: function (){
             drawGraph(chart_data);
+        },
+        getRecipieById: function(id){
+            getRecipieById(id);
         }
 	};
 })();
@@ -139,6 +165,13 @@ $(document).ready(function() {
    
     $("#load_recipies").click(function() {
          hack.init();
+
+         // $("#test").click(function(){
+         //        console.log(this);
+         //        //alert(this);
+         //  });
+
+        $(document).tooltip({ position: "top right", opacity: 0.7});
     });
 
     //$("#tabs").tabs();
