@@ -1,4 +1,5 @@
 var chart;
+var chart_data;
 var hack=(function () {
 
 	function getUrl(path){
@@ -8,9 +9,7 @@ var hack=(function () {
 	function getCuisines(){
 		$.ajax({
 		    type: 'GET',
-	        url: getUrl(config.cousine),
-	        //data: JSON.stringify(detailOptions),
-	        //contentType: "application/json; charset=utf-8",
+	        url: getUrl(config.cuisines),
 	        dataType: "json",
 	        success: successHandler,
 	        complete: function (xhr, status){
@@ -19,15 +18,46 @@ var hack=(function () {
 	        	}
 	        }
     	});
-	}
+	};
+
+    function getRecipies(){
+        $.ajax({
+            type: 'GET',
+            url: getUrl(config.recipes),
+            dataType: "json",
+            success: successHandler,
+            complete: function (xhr, status){
+                if(status == 'error'){
+                    console.log("Error getting data = " , xhr);
+                }
+            }
+        });
+    };
 
 	var successHandler = function(data){
-		console.log(data);
-		// for (var i = data.results.length - 1; i >= 0; i--) {
-		// 	var res = JSON.stringify(data.results[i]);
-		// 	$("#name-tag").append("res = " + res + "<br/>");
-		// };
-		drawGraph(data);
+
+        console.log(data);
+
+        var index;
+        var html = '<ul>';
+        var div_html = "";
+        var ingredients = "";
+        $.each(data.results, function(i, val) {
+
+            index = i + 1;
+            html += '<li><a href="#tab-'+index+'">'+val.name+'</a></li>';
+
+            $.each(val.ingredients,function(i,ingredient){
+                ingredients += '<li class="sub">'+ingredient+'</li>';
+            });
+
+            //div_html += '<div id="tabs-'+index+'"><p><ul><li>'+val.cooking_method+'</li><li>'+val.cuisine+'</li><li>ingredients</li>'+ingredients+'</ul></p></div>';
+        });
+
+
+        $("#tabs").html(html + '</ul>' + div_html);
+
+        chart_data = data;
 	};
 
 	function drawGraph(data){
@@ -44,7 +74,7 @@ var hack=(function () {
 	    })
 
 	    _series.push({
-	    	name: "cousine",
+	    	name: "recipes",
 	    	data: _data,
 	    });
 
@@ -57,7 +87,7 @@ var hack=(function () {
                 enabled: false
             },
 		    title: {
-                text: 'Cuisines'
+                text: 'recipes'
             },
             xAxis: {
                 categories: _categoryNames,
@@ -98,11 +128,23 @@ var hack=(function () {
 
 	return{
     	init: function () {
-    		getCuisines();
+            getRecipies();
+        },
+        drawGraph: function (){
+            drawGraph(chart_data);
         }
 	};
 })();
 
 $(document).ready(function() {
-	hack.init();
+   
+    $("#load_recipies").click(function() {
+         hack.init();
+    });
+
+    $("#tabs").tabs();
+
+    $("#button").click(function() {
+        hack.drawGraph();
+    });
 });
