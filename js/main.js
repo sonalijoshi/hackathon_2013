@@ -50,7 +50,6 @@ var hack=(function () {
             $.each(val.ingredients,function(i,ingredient){
                 ingredients += '<li class="sub">'+ingredient+'</li>';
             });
-
             //div_html += '<div id="tabs-'+index+'"><p><ul><li>'+val.cooking_method+'</li><li>'+val.cuisine+'</li><li>ingredients</li>'+ingredients+'</ul></p></div>';
         });
 
@@ -142,7 +141,7 @@ $(document).ready(function() {
          hack.init();
     });
 
-    $("#tabs").tabs();
+    //$("#tabs").tabs();
 
     $("#button").click(function() {
         hack.drawGraph();
