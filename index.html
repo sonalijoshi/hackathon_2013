@@ -41,6 +41,22 @@
 				width: 250px;
 				top: -18px;
 			}
+			body{
+				padding: 65px;
+				background: rgb(254,252,234); /* Old browsers */
+				background: -moz-linear-gradient(top,  rgba(254,252,234,1) 5%, rgba(254,252,234,1) 17%, rgba(241,218,54,1) 93%); /* FF3.6+ */
+				background: -webkit-gradient(linear, left top, left bottom, color-stop(5%,rgba(254,252,234,1)), color-stop(17%,rgba(254,252,234,1)), color-stop(93%,rgba(241,218,54,1))); /* Chrome,Safari4+ */
+				background: -webkit-linear-gradient(top,  rgba(254,252,234,1) 5%,rgba(254,252,234,1) 17%,rgba(241,218,54,1) 93%); /* Chrome10+,Safari5.1+ */
+				background: -o-linear-gradient(top,  rgba(254,252,234,1) 5%,rgba(254,252,234,1) 17%,rgba(241,218,54,1) 93%); /* Opera 11.10+ */
+				background: -ms-linear-gradient(top,  rgba(254,252,234,1) 5%,rgba(254,252,234,1) 17%,rgba(241,218,54,1) 93%); /* IE10+ */
+				background: linear-gradient(to bottom,  rgba(254,252,234,1) 5%,rgba(254,252,234,1) 17%,rgba(241,218,54,1) 93%); /* W3C */
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefcea', endColorstr='#f1da36',GradientType=0 ); /* IE6-9 */
+
+			}
+			.item{
+				padding: 3px;
+				position: relative;
+			}
 		</style>
 	</head>
 	<body>
@@ -63,7 +79,7 @@
 			<!-- <input type="text" id="cuisine" name="cuisine" /> -->
 			<label for="limit">Limit results</label>
 			<select name="limit" id="limit">
-				<option value="5" selected>5</option>
+				<option value="3" selected>3</option>
 				<option value="10">10</option>
 				<option value="15">15</option>
 				<option value="25">25</option>
@@ -76,8 +92,8 @@
 		</div>
 		<div id="rightPanel" style="float:right; width:60%" class="font">
 			<div id="name"></div>
-			<div id="graphContainer" ></div>
-			<div id="ingredients"></div>
+			<div id="graphContainer" style="width=400px;height=400px"></div>
+			<div id="ingredients" style="padding-top: 30px;height: 174px;"></div>
 		</div>
 		<div id="progressbar"></div>
 
