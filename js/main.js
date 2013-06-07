@@ -20,10 +20,14 @@ var hack=(function () {
     	});
 	};
 
-    function getRecipies(){
+    function getRecipies(cuisine, limit){
+
+        var params = "?cuisine=" + cuisine;
+        params += "&limit=" + limit;
+
         $.ajax({
             type: 'GET',
-            url: getUrl(config.recipes + config.recipieParams),
+            url: getUrl(config.recipes + params),
             dataType: "json",
             success: successHandler,
             complete: function (xhr, status){
@@ -50,43 +54,63 @@ var hack=(function () {
     }
 
 	var successHandler = function(data){
-
         console.log(data);
-
         var index;
         var html = '<ul>';
-        var div_html = "";
-        //var ingredients = "&#60ul&#62";
-
         $.each(data.results, function(i, val) {
             index = i + 1;
-            
-            // $.each(val.ingredients,function(i,ingredient){              
-            //     ingredients += '&#60li&#62'+ingredient+'&#60&#47li&#62';
-            // });
-            // ingredients += "&#60&#47ul&#62";
-
-            html += '<li><img style="height: 90px;" src="'+val.thumb+'"/><a href="#" class="nolink" onclick="hack.getRecipieById(this.id)" id='+val.id+'>'+val.name+'</a></li>';
-
-            
-            //div_html += '<div id="tabs-'+index+'"><p><ul><li>'+val.cooking_method+'</li><li>'+val.cuisine+'</li><li>ingredients</li>'+ingredients+'</ul></p></div>';
+            html += '<li><div><span><img style="height: 90px;" src="'+val.thumb+'"/><span><span><a href="#" class="nolink" onclick="hack.getRecipieById(this.id)" id='+val.id+'>'+val.name+'</a></span></div></li>';
         });
 
-        $("#tabs").html(html + '</ul>' + div_html);
-
+        $("#leftPanel").html(html + '</ul>');
         chart_data = data;
 	};
 
-
     var drawRecipieGraph = function(data){
-        drawNutritionGraph(data);
+        console.log(data);
+        
+        var div_html = "";
+        div_html += '<span class="item name">' + data.name + '</span></br>';
+        div_html += '<span class="item">Cooking Method:' + data.cooking_method + '</span></br>';;
+        div_html += '<span class="item">Cost: $' + data.cost + '</span></br>';;
+        div_html += '<span class="item">Cuisine: ' + data.cuisine + '</span></br>';
+        div_html += '<span class="item">Serves: ' + data.serves + '</span></br>';
+        div_html += '<span class="item">Yields: ' + data.yields + '</span></br>';
+        div_html += '<span class="item"><img src="'+ data.image +'" />' + '</span></br>';
+
+        var _ingredients = "Ingredients<br/><ul>";
+        $.each(data.ingredients,function(i,ingredient){              
+            _ingredients += '<li class="item">'+ ingredient.name + ' - ' + ingredient.quantity + ' '+ ingredient.unit +'</li>';
+        });
+        _ingredients += "</ul>";
+
+        $("#ingredients").html(div_html).append(_ingredients);
+
+        drawNutritionGraph(data.nutritional_info);
     };
 
+    function drawNutritionGraph(nutrution){
 
+        var _series = [],
+        _data = [];
 
-    function drawNutritionGraph(data){
-        var nutrution = data.nutritional_info;
-        console.log(nutrution);
+        $.each(nutrution, function(key, val) {
+            _data.push({
+                name:key,
+                y:20,
+                sliced:true,
+                selected:false,
+                text: val
+            });
+        })
+
+        _series.push({
+            type: 'pie',
+            name: "Nutrition Info",
+            data: _data,
+        });
+
+        console.log(_series);
 
             // Radialize the colors
         Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function(color) {
@@ -94,20 +118,20 @@ var hack=(function () {
                 radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
                 stops: [
                     [0, color],
-                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')]
                 ]
             };
         });
-        
-        // Build the chart
-        $('#graphContainer').highcharts({
+
+        var chartOptions = {
             chart: {
+                renderTo: 'graphContainer',
                 plotBackgroundColor: null,
                 plotBorderWidth: null,
                 plotShadow: false
             },
             title: {
-                text: ''
+                text: 'Nutrition Info'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage}%</b>',
@@ -127,23 +151,10 @@ var hack=(function () {
                     }
                 }
             },
-            series: [{
-                type: 'pie',
-                name: 'Nutrition Information',
-                data: [
-                    ['Calcium',   45.0],
-                    ['Potasium',       26.8],
-                    {
-                        name: 'fat',
-                        y: 12.8,
-                        sliced: true,
-                        selected: true
-                    },
-                    ['Iron',   0.7]
-                ]
-            }]
-        });
-    
+            series: _series
+        };
+
+        chart = new Highcharts.Chart(chartOptions);
     }
 
 	function drawGraph(data){
@@ -164,7 +175,15 @@ var hack=(function () {
 	    	data: _data,
 	    });
 
-		var options = {
+        options.xAxis = {
+            categories: _categoryNames,
+        };
+        options.series = _series;
+        chart = new Highcharts.Chart(options);
+        chart.redraw();
+ 	}
+
+    var options = {
             chart: {
                 renderTo: 'graphContainer',
                 type: 'column'
@@ -172,11 +191,8 @@ var hack=(function () {
             exporting: {
                 enabled: false
             },
-		    title: {
+            title: {
                 text: 'recipes'
-            },
-            xAxis: {
-                categories: _categoryNames,
             },
             yAxis: {
                 min: 0,
@@ -205,16 +221,12 @@ var hack=(function () {
             },
             credits: {
                 enabled: false
-            },
-            series: _series
-        };
-
-		chart = new Highcharts.Chart(options);
- 	}
+            }
+    };
 
 	return{
-    	init: function () {
-            getRecipies();
+    	init: function (cuisine, limit) {
+            getRecipies(cuisine, limit);
         },
         drawGraph: function (){
             drawGraph(chart_data);
@@ -226,19 +238,19 @@ var hack=(function () {
 })();
 
 $(document).ready(function() {
-   
-    $("#load_recipies").click(function() {
-         hack.init();
 
-         // $("#test").click(function(){
-         //        console.log(this);
-         //        //alert(this);
-         //  });
-
-        $(document).tooltip({ position: "top right", opacity: 0.7});
+    $('#searchForm').submit(function() {
+        hack.init($("#cuisine").val(), $("#limit").val());
+        return false;
+    });
+    
+    $('#loading_div').hide().ajaxStart(function(){
+        $(this).show();
+    }).ajaxStop(function() {
+        $(this).hide();
     });
 
-    //$("#tabs").tabs();
+   $(document).tooltip({ position: "top right", opacity: 0.7});
 
     $("#button").click(function() {
         hack.drawGraph();
