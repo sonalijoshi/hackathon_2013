@@ -38,24 +38,19 @@
 			}
 			.items {
 				display: inline-block;
-				width: 250px;
-				top: -18px;
+				width: 192px;
+				top: -30px;
 			}
 			body{
 				padding: 65px;
-				height: 100%;
-			    margin: 0;
-			    background-repeat: no-repeat;
-			    background-attachment: fixed;
-				background: -moz-linear-gradient(top,  rgba(255,255,255,1) 0%, rgba(255,255,255,1) 6%, rgba(255,255,255,0) 66%, rgba(255,255,255,0) 73%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(6%,rgba(255,255,255,1)), color-stop(66%,rgba(255,255,255,0)), color-stop(73%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(255,255,255,0) 66%,rgba(255,255,255,0) 73%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(255,255,255,0) 66%,rgba(255,255,255,0) 73%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(255,255,255,0) 66%,rgba(255,255,255,0) 73%); /* IE10+ */
-background: linear-gradient(to bottom,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(255,255,255,0) 66%,rgba(255,255,255,0) 73%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
-
-
+				background: -webkit-linear-gradient(top,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 6%,rgba(255,255,255,0) 66%,rgba(255,255,255,0) 73%); /* Chrome10+,Safari5.1+ */
+ 				background-repeat:repeat-x;
+ 				background-color: orange;
+			}
+			#wrapper {
+			 max-width:960px;
+			 min-width:840px;
+			 margin: 0 auto;
 			}
 			.item{
 				padding: 3px;
@@ -64,6 +59,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 		</style>
 	</head>
 	<body>
+		<div id="wrapper">
 		<!-- <div id="name-tag" style="padding:30px; text-align:center;size: 20px;font-family:Lucida Grande,Lucida Sans Unicode,Verdana,Arial, Helvetica, sans-serif;font-size: 16px;color: #274b6d;fill: #274b6d;">
 			Hackathon
 		</div> -->
@@ -101,6 +97,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 			<div id="ingredients" style="padding-top: 30px;height: 174px;"></div>
 		</div>
 		<div id="progressbar"></div>
-
+	</div>
 	</body>
 </html>
