@@ -84,7 +84,8 @@ var hack=(function () {
         _ingredients += "</ul>";
 
         $("#name").html(div_html);
-        $("#ingredients").html('<span class="item"><img src="'+ data.image +'" />' + '</span></br>').append(_ingredients);
+        // '<span class="item"><img src="'+ data.image +'" />' + '</span></br>'
+        $("#ingredients").html(_ingredients);
 
         drawNutritionGraph(data.nutritional_info);
     };
