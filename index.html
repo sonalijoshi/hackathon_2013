@@ -36,8 +36,10 @@
 				background-color: whitesmoke;
 				font-style: italic;
 			}
-			.item {
-				
+			.items {
+				display: inline-block;
+				width: 250px;
+				top: -18px;
 			}
 		</style>
 	</head>
@@ -46,7 +48,7 @@
 			Hackathon
 		</div> -->
 		<div>
-		<img src="http://site-bucket-301a95fb.s3.amazonaws.com/challenges/1.medium.png?1366624324" style="width: 468;padding-bottom:55px;padding-left: 22px;"/>
+		<!-- <img src="http://site-bucket-301a95fb.s3.amazonaws.com/challenges/1.medium.png?1366624324" style="width: 468;padding-bottom:55px;padding-left: 22px;"/> -->
 		<div class="font"><h2>Search for recipies</h2></div>
 		<form id="searchForm" class="font">
 			<label for="cuisine">Cuisine</label>
@@ -73,9 +75,9 @@
 			No recipies found
 		</div>
 		<div id="rightPanel" style="float:right; width:60%" class="font">
-			<div id="ingredients">
-			</div>
+			<div id="name"></div>
 			<div id="graphContainer" ></div>
+			<div id="ingredients"></div>
 		</div>
 		<div id="progressbar"></div>
 

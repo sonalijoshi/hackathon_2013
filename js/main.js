@@ -59,7 +59,7 @@ var hack=(function () {
         var html = '<ul>';
         $.each(data.results, function(i, val) {
             index = i + 1;
-            html += '<li><div><span><img style="height: 90px;" src="'+val.thumb+'"/><span><span><a href="#" class="nolink" onclick="hack.getRecipieById(this.id)" id='+val.id+'>'+val.name+'</a></span></div></li>';
+            html += '<li><div><span><img style="height: 90px;" src="'+val.thumb+'"/><span><span><a href="#" class="nolink items" onclick="hack.getRecipieById(this.id)" id='+val.id+'>'+val.name+'</a></span></div></li>';
         });
 
         $("#leftPanel").html(html + '</ul>');
@@ -71,20 +71,20 @@ var hack=(function () {
         
         var div_html = "";
         div_html += '<span class="item name">' + data.name + '</span></br>';
-        div_html += '<span class="item">Cooking Method:' + data.cooking_method + '</span></br>';;
+        //div_html += '<span class="item">Cooking Method:' + data.cooking_method + '</span></br>';;
         div_html += '<span class="item">Cost: $' + data.cost + '</span></br>';;
-        div_html += '<span class="item">Cuisine: ' + data.cuisine + '</span></br>';
+        //div_html += '<span class="item">Cuisine: ' + data.cuisine + '</span></br>';
         div_html += '<span class="item">Serves: ' + data.serves + '</span></br>';
         div_html += '<span class="item">Yields: ' + data.yields + '</span></br>';
-        div_html += '<span class="item"><img src="'+ data.image +'" />' + '</span></br>';
-
+        
         var _ingredients = "Ingredients<br/><ul>";
         $.each(data.ingredients,function(i,ingredient){              
             _ingredients += '<li class="item">'+ ingredient.name + ' - ' + ingredient.quantity + ' '+ ingredient.unit +'</li>';
         });
         _ingredients += "</ul>";
 
-        $("#ingredients").html(div_html).append(_ingredients);
+        $("#name").html(div_html);
+        $("#ingredients").html('<span class="item"><img src="'+ data.image +'" />' + '</span></br>').append(_ingredients);
 
         drawNutritionGraph(data.nutritional_info);
     };
@@ -242,12 +242,6 @@ $(document).ready(function() {
     $('#searchForm').submit(function() {
         hack.init($("#cuisine").val(), $("#limit").val());
         return false;
-    });
-    
-    $('#loading_div').hide().ajaxStart(function(){
-        $(this).show();
-    }).ajaxStop(function() {
-        $(this).hide();
     });
 
    $(document).tooltip({ position: "top right", opacity: 0.7});
