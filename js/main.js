@@ -92,16 +92,50 @@ var hack=(function () {
     function drawNutritionGraph(nutrution){
 
         var _series = [],
-        _data = [];
+        _data = [],
+        _data_parsed = [],
+        _parsed = [] ;
 
         $.each(nutrution, function(key, val) {
-            _data.push({
-                name:key,
-                y:20,
-                sliced:true,
-                selected:false,
+
+            _parsed = val.split("per");
+            var _converted = 0;
+
+            if(_parsed[0].search("mg") >= 0){
+                var _temp = _parsed[0].split("mg");
+                _converted = _temp[0] / 1000;
+                //console.log("converted" + _temp[0] + " to " +  _converted);
+            }else if(_parsed[0].search("g") >= 0){
+                var _temp = _parsed[0].split("g");
+                _converted = _temp[0] * 1;
+                //console.log("converted" + _temp[0] + " to " +  _converted);
+            }else{
+                return true;
+            }
+
+            if(_converted < 0){
+                _converted = 0;
+            }
+
+            _data_parsed.push({
+                name: key,
+                value: _converted,
+                unit: "g",
+                per: "100 g",
                 text: val
             });
+        });
+
+        console.log(_data_parsed);
+
+        $.each(_data_parsed, function(key, val) {
+                _data.push({
+                    name:val.name,
+                    y:val.value,
+                    sliced:true,
+                    selected:false,
+                    text: val.text
+                });
         })
 
         _series.push({
@@ -134,7 +168,7 @@ var hack=(function () {
                 text: 'Nutrition Info'
             },
             tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                pointFormat: '{point.name}: <b>{point.text}%</b>',
                 percentageDecimals: 1
             },
             plotOptions: {
